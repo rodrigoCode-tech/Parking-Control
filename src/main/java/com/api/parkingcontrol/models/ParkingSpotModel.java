@@ -18,14 +18,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
+
+
 @Entity
 @Table(name = "TB_PARKING_SPOT")
 public class ParkingSpotModel implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+	    @Id
+		@GeneratedValue(generator = "uuid2")
+		@GenericGenerator(name = "uuid2", strategy = "uuid2")
+		@Column(columnDefinition = "VARCHAR(36)")
+	    @Type(type = "uuid-char")
+		private UUID id;
 	
     @Column(nullable = false, unique = true, length = 10)
     private String parkingSpotNumber;
