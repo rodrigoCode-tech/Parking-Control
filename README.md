@@ -5,12 +5,12 @@ Post, Delete , Put
 
 #API feita em Java usando Springboot
 
-# Spring Framework
-# Inversão de Controle
-# Injeção de Dependências
-# Beans
+- Spring Framework
+- Inversão de Controle
+- Injeção de Dependências
+- Beans
  
-#-API usa as tecnologias -#
+# API usa as tecnologias
   -Spring Data JPA 
   -Spring Validation
   -DevTools
