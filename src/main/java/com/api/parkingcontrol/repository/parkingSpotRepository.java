@@ -2,6 +2,7 @@ package com.api.parkingcontrol.repository;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,5 @@ public interface parkingSpotRepository extends JpaRepository<ParkingSpotModel, U
 	boolean existsByLicensePlateCar(String licensePlateCar);
 	boolean existsByParkingSpotNumber(String parkingSpotNumber);
 	boolean existsByApartmentAndBlock(String apartment, String block);
+
 }
