@@ -43,7 +43,12 @@ public class parkingSpotService {
 	public Page<ParkingSpotModel> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
 	}
-
+	
+	public Page<ParkingSpotModel> findByName(String licensePlateCar,Pageable pageable){
+		return repository.findByName(licensePlateCar, pageable);
+	}
+	
+	
 	public Optional<ParkingSpotModel> findById(UUID id) {
         return repository.findById(id);
     }
