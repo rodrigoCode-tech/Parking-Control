@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.parkingcontrol.dtos.ParkingSpotDto;
@@ -70,6 +71,10 @@ public class parkingSpotController {
 		return ResponseEntity.status(HttpStatus.OK).body(service.findAll(pageable));
 	}
 	
+	@GetMapping("/name/{name}")
+    public ResponseEntity<Page<ParkingSpotModel>> getByName(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC)Pageable pageable, String licensePlateCar) {
+        	return ResponseEntity.status(HttpStatus.OK).body(service.findByName(licensePlateCar, pageable));
+    }
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> getOneParkingSpot(@PathVariable(value = "id") UUID id) {
 		Optional<ParkingSpotModel> parkingSpotModelOptional = service.findById(id);
