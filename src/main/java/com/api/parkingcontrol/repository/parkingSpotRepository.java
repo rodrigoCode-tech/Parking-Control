@@ -21,7 +21,7 @@ public interface parkingSpotRepository extends JpaRepository<ParkingSpotModel, U
 	boolean existsByParkingSpotNumber(String parkingSpotNumber);
 	boolean existsByApartmentAndBlock(String apartment, String block);
 	
-	@Query(value="SELECT u FROM ParkingSpotModel u where u.licensePlateCar = ?1")
+	@Query(value="SELECT u FROM ParkingSpotModel u where u.licensePlateCar = ?1 OR ?1 is null")
 	Page<ParkingSpotModel> findByName(@Param("licensePlateCar") String licensePlateCar, Pageable pageable);
 
 }
