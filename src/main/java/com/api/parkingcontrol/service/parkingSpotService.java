@@ -45,7 +45,13 @@ public class parkingSpotService {
 	}
 	
 	public Page<ParkingSpotModel> findByName(String licensePlateCar,Pageable pageable){
+		if(licensePlateCar.isEmpty()) {
+			return null;
+			
+		}else {
+	
 		return repository.findByName(licensePlateCar, pageable);
+		}
 	}
 	
 	
