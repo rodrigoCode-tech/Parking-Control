@@ -44,14 +44,10 @@ public class parkingSpotService {
 		return repository.findAll(pageable);
 	}
 	
-	public Page<ParkingSpotModel> findByName(String licensePlateCar,Pageable pageable){
-		if(licensePlateCar.isEmpty()) {
-			return null;
-			
-		}else {
-	
+	public Page<ParkingSpotModel> findByName(String licensePlateCar,Pageable pageable){	
+		
+		licensePlateCar = licensePlateCar.isEmpty() ? null : licensePlateCar;
 		return repository.findByName(licensePlateCar, pageable);
-		}
 	}
 	
 	
