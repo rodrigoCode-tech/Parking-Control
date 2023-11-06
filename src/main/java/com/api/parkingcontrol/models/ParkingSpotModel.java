@@ -1,25 +1,12 @@
 package com.api.parkingcontrol.models;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-import javax.persistence.Column;
-import java.time.LocalDateTime;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 
 
@@ -66,20 +53,6 @@ public class ParkingSpotModel implements Serializable {
     }
     
 
-	public ParkingSpotModel(UUID id, String parkingSpotNumber, String licensePlateCar, String brandCar, String modelCar,
-			String colorCar, LocalDateTime registrationDate, String responsibleName, String apartment, String block) {
-		super();
-		this.id = id;
-		this.parkingSpotNumber = parkingSpotNumber;
-		this.licensePlateCar = licensePlateCar;
-		this.brandCar = brandCar;
-		this.modelCar = modelCar;
-		this.colorCar = colorCar;
-		this.registrationDate = registrationDate;
-		this.responsibleName = responsibleName;
-		this.apartment = apartment;
-		this.block = block;
-	}
 
 	public UUID getId() {
 		return id;
@@ -160,6 +133,4 @@ public class ParkingSpotModel implements Serializable {
 	public void setBlock(String block) {
 		this.block = block;
 	}
-    
-    
 }
