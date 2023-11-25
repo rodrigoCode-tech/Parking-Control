@@ -53,6 +53,20 @@ public class ParkingSpotModel implements Serializable {
     }
     
 
+	public ParkingSpotModel(UUID id, String parkingSpotNumber, String licensePlateCar, String brandCar, String modelCar,
+			String colorCar, LocalDateTime registrationDate, String responsibleName, String apartment, String block) {
+		super();
+		this.id = id;
+		this.parkingSpotNumber = parkingSpotNumber;
+		this.licensePlateCar = licensePlateCar;
+		this.brandCar = brandCar;
+		this.modelCar = modelCar;
+		this.colorCar = colorCar;
+		this.registrationDate = registrationDate;
+		this.responsibleName = responsibleName;
+		this.apartment = apartment;
+		this.block = block;
+	}
 
 	public UUID getId() {
 		return id;
@@ -133,4 +147,6 @@ public class ParkingSpotModel implements Serializable {
 	public void setBlock(String block) {
 		this.block = block;
 	}
+    
+    
 }

@@ -14,6 +14,8 @@ import com.api.parkingcontrol.models.ParkingSpotModel;
 @Repository
 public interface ParkingSpotRepository extends JpaRepository<ParkingSpotModel, UUID>{
 
+	//Como esses métodos são metodos customizados, para que eu os use
+	//devo os declarar dentro do repository 
 	boolean existsByLicensePlateCar(String licensePlateCar);
 	boolean existsByParkingSpotNumber(String parkingSpotNumber);
 	boolean existsByApartmentAndBlock(String apartment, String block);
