@@ -26,7 +26,6 @@ public class ParkingSpotService {
 	@Transactional
     public ParkingSpotModel save(ParkingSpotModel parkingSpotModel) {
 		return repository.save(parkingSpotModel);
-       
     }
 
 	public boolean existsDuplicateParkingSpot(ParkingSpotDto parkingSpotDto) {
@@ -43,8 +42,6 @@ public class ParkingSpotService {
 		licensePlateCar = licensePlateCar.isEmpty() ? null : licensePlateCar;
 		return repository.findByName(licensePlateCar, pageable);
 	}
-	
-	
 	public Optional<ParkingSpotModel> findById(UUID id) {
         return repository.findById(id);
     }
