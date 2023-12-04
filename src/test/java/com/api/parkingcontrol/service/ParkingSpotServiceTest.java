@@ -6,12 +6,16 @@ import com.api.parkingcontrol.repository.ParkingSpotRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
+import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 class ParkingSpotServiceTest {
 
@@ -35,7 +39,7 @@ class ParkingSpotServiceTest {
 
     @Test
     void should_Save_a_Parking_Spot() {
-        Mockito.when(repository.save(any(ParkingSpotModel.class))).thenReturn(model);
+        when(repository.save(any(ParkingSpotModel.class))).thenReturn(model);
 
         ParkingSpotModel result = service.save(model);
 
@@ -56,11 +60,54 @@ class ParkingSpotServiceTest {
     }
 
     @Test
+    public void should_Find_All_Parking_Spots_By_Page() {
+        Pageable pageable = Pageable.ofSize(10).withPage(0);
+        Page<ParkingSpotModel> mockPage = new PageImpl<>(Collections.emptyList());
+
+        when(repository.findAll(pageable)).thenReturn(mockPage);
+        ParkingSpotService service = new ParkingSpotService(repository);
+
+        Page<ParkingSpotModel> result = service.findAll(pageable);
+        assertEquals(mockPage, result);
+    }
+
+    @Test
+    public void should_Find_Parking_Spots_By_Name() {
+        Pageable pageable = Pageable.ofSize(10).withPage(0);
+        Page<ParkingSpotModel> mockPage = new PageImpl<>(Collections.emptyList());
+
+        when(repository.findByName("ABC-1234", pageable)).thenReturn(mockPage);
+        ParkingSpotService service = new ParkingSpotService(repository);
+
+        Page<ParkingSpotModel> result = service.findByName("ABC-1234", pageable);
+        assertEquals(mockPage, result);
+    }
+
+    @Test
+    public void should_Find_Parking_Spot_By_Id() {
+        when(repository.findById(any())).thenReturn(java.util.Optional.of(model));
+        ParkingSpotService service = new ParkingSpotService(repository);
+
+        Optional<ParkingSpotModel> result = service.findById(model.getId());
+        assertEquals(model, result.get());
+    }
+
+    @Test
+    public void should_Delete_Parking_Spot() {
+        doNothing().when(repository).delete(model);
+        ParkingSpotService service = new ParkingSpotService(repository);
+
+        service.delete(model);
+
+        assertEquals(model, model);
+    }
+
+    @Test
     void should_ReturnTrue_When_DuplicateLicensePlateCarExists() {
         ParkingSpotDto parkingSpotDto = new ParkingSpotDto();
         parkingSpotDto.setLicensePlateCar("ABC-1234");
 
-        Mockito.when(repository.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())).thenReturn(true);
+        when(repository.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())).thenReturn(true);
 
         boolean result = service.existsDuplicateParkingSpot(parkingSpotDto);
 
@@ -72,7 +119,7 @@ class ParkingSpotServiceTest {
         ParkingSpotDto parkingSpotDto = new ParkingSpotDto();
         parkingSpotDto.setParkingSpotNumber("10");
 
-        Mockito.when(repository.existsByParkingSpotNumber(parkingSpotDto.getParkingSpotNumber())).thenReturn(true);
+        when(repository.existsByParkingSpotNumber(parkingSpotDto.getParkingSpotNumber())).thenReturn(true);
 
         boolean result = service.existsDuplicateParkingSpot(parkingSpotDto);
 
@@ -85,7 +132,7 @@ class ParkingSpotServiceTest {
         parkingSpotDto.setApartment("111");
         parkingSpotDto.setBlock("B");
 
-        Mockito.when(repository.existsByApartmentAndBlock(parkingSpotDto.getApartment(), parkingSpotDto.getBlock())).thenReturn(true);
+        when(repository.existsByApartmentAndBlock(parkingSpotDto.getApartment(), parkingSpotDto.getBlock())).thenReturn(true);
 
         boolean result = service.existsDuplicateParkingSpot(parkingSpotDto);
 
@@ -100,9 +147,9 @@ class ParkingSpotServiceTest {
         parkingSpotDto.setApartment("111");
         parkingSpotDto.setBlock("B");
 
-        Mockito.when(repository.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())).thenReturn(false);
-        Mockito.when(repository.existsByParkingSpotNumber(parkingSpotDto.getParkingSpotNumber())).thenReturn(false);
-        Mockito.when(repository.existsByApartmentAndBlock(parkingSpotDto.getApartment(), parkingSpotDto.getBlock())).thenReturn(false);
+        when(repository.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())).thenReturn(false);
+        when(repository.existsByParkingSpotNumber(parkingSpotDto.getParkingSpotNumber())).thenReturn(false);
+        when(repository.existsByApartmentAndBlock(parkingSpotDto.getApartment(), parkingSpotDto.getBlock())).thenReturn(false);
 
         boolean result = service.existsDuplicateParkingSpot(parkingSpotDto);
 
