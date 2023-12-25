@@ -1,6 +1,6 @@
 package com.api.parkingcontrol.service;
 
-import com.api.parkingcontrol.dtos.ParkingSpotDto;
+import com.api.parkingcontrol.exception.DuplicateParkingSpotException;
 import com.api.parkingcontrol.models.ParkingSpotModel;
 import com.api.parkingcontrol.repository.ParkingSpotRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,6 +60,14 @@ class ParkingSpotServiceTest {
     }
 
     @Test
+    public void should_Retunr_Duplicate_Exception_When_DuplicateLicensePlateCarExists() {
+        when(repository.existsByLicensePlateCar(model.getLicensePlateCar())).thenReturn(true);
+        ParkingSpotService service = new ParkingSpotService(repository);
+
+        assertThrows(DuplicateParkingSpotException.class, () -> service.save(model));
+    }
+
+    @Test
     public void should_Find_All_Parking_Spots_By_Page() {
         Pageable pageable = Pageable.ofSize(10).withPage(0);
         Page<ParkingSpotModel> mockPage = new PageImpl<>(Collections.emptyList());
@@ -104,54 +112,54 @@ class ParkingSpotServiceTest {
 
     @Test
     void should_ReturnTrue_When_DuplicateLicensePlateCarExists() {
-        ParkingSpotDto parkingSpotDto = new ParkingSpotDto();
-        parkingSpotDto.setLicensePlateCar("ABC-1234");
+        ParkingSpotModel parkingSpotModel = new ParkingSpotModel();
+        parkingSpotModel.setLicensePlateCar("ABC-1234");
 
-        when(repository.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())).thenReturn(true);
+        when(repository.existsByLicensePlateCar(parkingSpotModel.getLicensePlateCar())).thenReturn(true);
 
-        boolean result = service.existsDuplicateParkingSpot(parkingSpotDto);
+        boolean result = service.existsDuplicateParkingSpotModel(parkingSpotModel);
 
         assertTrue(result);
     }
 
     @Test
     void should_ReturnTrue_When_DuplicateParkingSpotNumberExists() {
-        ParkingSpotDto parkingSpotDto = new ParkingSpotDto();
-        parkingSpotDto.setParkingSpotNumber("10");
+        ParkingSpotModel parkingSpotModel = new ParkingSpotModel();
+        parkingSpotModel.setParkingSpotNumber("10");
 
-        when(repository.existsByParkingSpotNumber(parkingSpotDto.getParkingSpotNumber())).thenReturn(true);
+        when(repository.existsByParkingSpotNumber(parkingSpotModel.getParkingSpotNumber())).thenReturn(true);
 
-        boolean result = service.existsDuplicateParkingSpot(parkingSpotDto);
+        boolean result = service.existsDuplicateParkingSpotModel(parkingSpotModel);
 
         assertTrue(result);
     }
 
     @Test
     void should_ReturnTrue_When_DuplicateApartmentAndBlockExist() {
-        ParkingSpotDto parkingSpotDto = new ParkingSpotDto();
-        parkingSpotDto.setApartment("111");
-        parkingSpotDto.setBlock("B");
+        ParkingSpotModel parkingSpotModel = new ParkingSpotModel();
+        parkingSpotModel.setApartment("111");
+        parkingSpotModel.setBlock("B");
 
-        when(repository.existsByApartmentAndBlock(parkingSpotDto.getApartment(), parkingSpotDto.getBlock())).thenReturn(true);
+        when(repository.existsByApartmentAndBlock(parkingSpotModel.getApartment(), parkingSpotModel.getBlock())).thenReturn(true);
 
-        boolean result = service.existsDuplicateParkingSpot(parkingSpotDto);
+        boolean result = service.existsDuplicateParkingSpotModel(parkingSpotModel);
 
         assertTrue(result);
     }
 
     @Test
     void should_ReturnFalse_When_NoDuplicatesExist() {
-        ParkingSpotDto parkingSpotDto = new ParkingSpotDto();
-        parkingSpotDto.setLicensePlateCar("ABC-1234");
-        parkingSpotDto.setParkingSpotNumber("10");
-        parkingSpotDto.setApartment("111");
-        parkingSpotDto.setBlock("B");
+        ParkingSpotModel parkingSpotModel = new ParkingSpotModel();
+        parkingSpotModel.setLicensePlateCar("ABC-1234");
+        parkingSpotModel.setParkingSpotNumber("10");
+        parkingSpotModel.setApartment("111");
+        parkingSpotModel.setBlock("B");
 
-        when(repository.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())).thenReturn(false);
-        when(repository.existsByParkingSpotNumber(parkingSpotDto.getParkingSpotNumber())).thenReturn(false);
-        when(repository.existsByApartmentAndBlock(parkingSpotDto.getApartment(), parkingSpotDto.getBlock())).thenReturn(false);
+        when(repository.existsByLicensePlateCar(parkingSpotModel.getLicensePlateCar())).thenReturn(false);
+        when(repository.existsByParkingSpotNumber(parkingSpotModel.getParkingSpotNumber())).thenReturn(false);
+        when(repository.existsByApartmentAndBlock(parkingSpotModel.getApartment(), parkingSpotModel.getBlock())).thenReturn(false);
 
-        boolean result = service.existsDuplicateParkingSpot(parkingSpotDto);
+        boolean result = service.existsDuplicateParkingSpotModel(parkingSpotModel);
 
         assertFalse(result);
     }

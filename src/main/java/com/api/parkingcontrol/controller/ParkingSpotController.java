@@ -1,6 +1,7 @@
 package com.api.parkingcontrol.controller;
 
 import com.api.parkingcontrol.dtos.ParkingSpotDto;
+import com.api.parkingcontrol.exception.DuplicateParkingSpotException;
 import com.api.parkingcontrol.models.ParkingSpotModel;
 import com.api.parkingcontrol.service.ParkingSpotService;
 import org.springframework.beans.BeanUtils;
@@ -32,15 +33,14 @@ public class ParkingSpotController {
 	@PostMapping
     public ResponseEntity<Object> saveParkingSpot(@RequestBody @Valid ParkingSpotDto parkingSpotDto){
 		ParkingSpotModel parkingSpotModel = new ParkingSpotModel();
-
-		if (service.existsDuplicateParkingSpot(parkingSpotDto)) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Duplicate parking spot information!");
-		}
-
         BeanUtils.copyProperties(parkingSpotDto, parkingSpotModel);
         parkingSpotModel.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
-        
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(parkingSpotModel));
+
+		try{
+			return ResponseEntity.status(HttpStatus.CREATED).body(service.save(parkingSpotModel));
+		}catch (DuplicateParkingSpotException e ){
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: " + e.getMessage());
+		}
 	}
 	
 	@GetMapping

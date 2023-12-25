@@ -1,17 +1,15 @@
 package com.api.parkingcontrol.service;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.transaction.Transactional;
-
-import com.api.parkingcontrol.dtos.ParkingSpotDto;
+import com.api.parkingcontrol.exception.DuplicateParkingSpotException;
+import com.api.parkingcontrol.models.ParkingSpotModel;
+import com.api.parkingcontrol.repository.ParkingSpotRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.api.parkingcontrol.models.ParkingSpotModel;
-import com.api.parkingcontrol.repository.ParkingSpotRepository;
+import javax.transaction.Transactional;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ParkingSpotService {
@@ -25,13 +23,15 @@ public class ParkingSpotService {
 
 	@Transactional
     public ParkingSpotModel save(ParkingSpotModel parkingSpotModel) {
+		if (existsDuplicateParkingSpotModel(parkingSpotModel)) {
+			throw new DuplicateParkingSpotException("Conflict: Duplicate parking spot information!");
+		}
 		return repository.save(parkingSpotModel);
-    }
-
-	public boolean existsDuplicateParkingSpot(ParkingSpotDto parkingSpotDto) {
-		return repository.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar()) ||
-				repository.existsByParkingSpotNumber(parkingSpotDto.getParkingSpotNumber()) ||
-				repository.existsByApartmentAndBlock(parkingSpotDto.getApartment(), parkingSpotDto.getBlock());
+	}
+	public boolean existsDuplicateParkingSpotModel(ParkingSpotModel parkingSpotModel) {
+		return repository.existsByLicensePlateCar(parkingSpotModel.getLicensePlateCar()) ||
+				repository.existsByParkingSpotNumber(parkingSpotModel.getParkingSpotNumber()) ||
+				repository.existsByApartmentAndBlock(parkingSpotModel.getApartment(), parkingSpotModel.getBlock());
 	}
 	public Page<ParkingSpotModel> findAll(Pageable pageable) {
 		return repository.findAll(pageable);
