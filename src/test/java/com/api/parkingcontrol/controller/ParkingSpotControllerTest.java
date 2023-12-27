@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -93,6 +94,8 @@ class ParkingSpotControllerTest {
                     .andExpect(jsonPath("$.colorCar").value("red"))
                     .andExpect(jsonPath("$.modelCar").value("hb20"))
                     .andExpect(jsonPath("$.responsibleName").value("Rafael"));
+
+            assertEquals(200, mvcResult.getResponse().getStatus());
      }
 
      @Test
@@ -113,11 +116,32 @@ class ParkingSpotControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/parkingSpot/" + createdParkingSpotId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
-         mockMvc.perform(MockMvcRequestBuilders.get("/parkingSpot/" + createdParkingSpotId)
-                         .contentType(MediaType.APPLICATION_JSON))
-                 .andExpect(status().isNotFound());
+        mockMvc.perform(MockMvcRequestBuilders.get("/parkingSpot/" + createdParkingSpotId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void should_return_plate_car() throws Exception {
+        String licensePlateCar = "ABC-968";
+        String parkingSpotJson = "{\"licensePlateCar\": \"" + licensePlateCar + "\", \"parkingSpotNumber\": \"A8\"," +
+                " \"responsibleName\": \"Rafael\", \"brandCar\": \"Hunday\", \"modelCar\": \"hb20\"," +
+                " \"apartment\": \"165\", \"block\": \"c\", \"colorCar\": \"red\"}";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/parkingSpot")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(parkingSpotJson))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/parkingSpot/name/" + licensePlateCar)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].licensePlateCar").value(licensePlateCar   ));
+
+
     }
 
 }
