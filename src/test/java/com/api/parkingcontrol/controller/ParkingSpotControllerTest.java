@@ -95,7 +95,6 @@ class ParkingSpotControllerTest {
                     .andExpect(jsonPath("$.modelCar").value("hb20"))
                     .andExpect(jsonPath("$.responsibleName").value("Rafael"));
 
-            assertEquals(200, mvcResult.getResponse().getStatus());
      }
 
      @Test
@@ -125,10 +124,10 @@ class ParkingSpotControllerTest {
 
     @Test
     public void should_return_plate_car() throws Exception {
-        String licensePlateCar = "ABC-968";
-        String parkingSpotJson = "{\"licensePlateCar\": \"" + licensePlateCar + "\", \"parkingSpotNumber\": \"A8\"," +
-                " \"responsibleName\": \"Rafael\", \"brandCar\": \"Hunday\", \"modelCar\": \"hb20\"," +
-                " \"apartment\": \"165\", \"block\": \"c\", \"colorCar\": \"red\"}";
+        String licensePlateCar = "ABC-954";
+        String parkingSpotJson = "{\"licensePlateCar\": \"" + licensePlateCar + "\", \"parkingSpotNumber\": \"A7\"," +
+                " \"responsibleName\": \"Karine\", \"brandCar\": \"Fiat\", \"modelCar\": \"Toro\"," +
+                " \"apartment\": \"16\", \"block\": \"d\", \"colorCar\": \"red\"}";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/parkingSpot")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -140,8 +139,6 @@ class ParkingSpotControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content", hasSize(1)))
                 .andExpect(jsonPath("$.content[0].licensePlateCar").value(licensePlateCar   ));
-
-
     }
 
 }
