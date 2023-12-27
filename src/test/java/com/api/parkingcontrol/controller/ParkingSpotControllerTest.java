@@ -98,6 +98,31 @@ class ParkingSpotControllerTest {
      }
 
      @Test
+     public void should_Find_All_Parking_Spots() throws Exception {
+         String parkingSpotJson = "{\"licensePlateCar\": \"ABC-369\", \"parkingSpotNumber\": \"A9\"," +
+                 " \"responsibleName\": \"Diego\", \"brandCar\": \"Hunday\", \"modelCar\": \"Civic\"," +
+                 " \"apartment\": \"768\", \"block\": \"c\", \"colorCar\": \"red\"}";
+
+         mockMvc.perform(MockMvcRequestBuilders.post("/parkingSpot")
+                         .contentType(MediaType.APPLICATION_JSON)
+                         .content(parkingSpotJson))
+                 .andExpect(status().isCreated());
+
+         mockMvc.perform(MockMvcRequestBuilders.get("/parkingSpot")
+                         .contentType(MediaType.APPLICATION_JSON))
+                 .andExpect(status().isOk())
+                 .andExpect(jsonPath("$.content", hasSize(5)))
+                 .andExpect(jsonPath("$.content[0].licensePlateCar").value("ABC-369"))
+                 .andExpect(jsonPath("$.content[0].parkingSpotNumber").value("A9"))
+                 .andExpect(jsonPath("$.content[0].apartment").value("768"))
+                 .andExpect(jsonPath("$.content[0].block").value("c"))
+                 .andExpect(jsonPath("$.content[0].brandCar").value("Hunday"))
+                 .andExpect(jsonPath("$.content[0].colorCar").value("red"))
+                 .andExpect(jsonPath("$.content[0].modelCar").value("Civic"))
+                 .andExpect(jsonPath("$.content[0].responsibleName").value("Diego"));
+     }
+
+     @Test
     public void should_Delete_Parking_Spot() throws Exception {
         String parkingSpotJson = "{\"licensePlateCar\": \"ABC-968\", \"parkingSpotNumber\": \"A8\"," +
                 " \"responsibleName\": \"Rafael\", \"brandCar\": \"Hunday\", \"modelCar\": \"hb20\"," +
