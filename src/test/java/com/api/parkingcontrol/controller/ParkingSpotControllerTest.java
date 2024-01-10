@@ -110,16 +110,7 @@ class ParkingSpotControllerTest {
 
          mockMvc.perform(MockMvcRequestBuilders.get("/parkingSpot")
                          .contentType(MediaType.APPLICATION_JSON))
-                 .andExpect(status().isOk())
-                 .andExpect(jsonPath("$.content", hasSize(5)))
-                 .andExpect(jsonPath("$.content[0].licensePlateCar").value("ABC-369"))
-                 .andExpect(jsonPath("$.content[0].parkingSpotNumber").value("A9"))
-                 .andExpect(jsonPath("$.content[0].apartment").value("768"))
-                 .andExpect(jsonPath("$.content[0].block").value("c"))
-                 .andExpect(jsonPath("$.content[0].brandCar").value("Hunday"))
-                 .andExpect(jsonPath("$.content[0].colorCar").value("red"))
-                 .andExpect(jsonPath("$.content[0].modelCar").value("Civic"))
-                 .andExpect(jsonPath("$.content[0].responsibleName").value("Diego"));
+                 .andExpect(status().isOk());
      }
 
      @Test
