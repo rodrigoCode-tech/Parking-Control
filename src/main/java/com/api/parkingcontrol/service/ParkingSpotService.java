@@ -1,8 +1,10 @@
 package com.api.parkingcontrol.service;
 
+import com.api.parkingcontrol.dtos.ParkingSpotDto;
 import com.api.parkingcontrol.exception.DuplicateParkingSpotException;
 import com.api.parkingcontrol.models.ParkingSpotModel;
 import com.api.parkingcontrol.repository.ParkingSpotRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,17 @@ public class ParkingSpotService {
 	public  void delete(ParkingSpotModel parkingSpotModel) {
 		repository.delete(parkingSpotModel);
 		
+	}
+
+	public ParkingSpotModel update(UUID id, ParkingSpotDto parkingSpotDto) {
+		Optional<ParkingSpotModel> parkingSpotModelOptional = repository.findById(id);
+		if (!parkingSpotModelOptional.isPresent()) {
+			throw new DuplicateParkingSpotException("Conflict: Duplicate parking spot information!");
+		}
+
+		ParkingSpotModel existingParkingSpotModel = parkingSpotModelOptional.get();
+		BeanUtils.copyProperties(parkingSpotDto, existingParkingSpotModel);
+		return repository.save(existingParkingSpotModel);
 	}
 	
 	
