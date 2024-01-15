@@ -1,5 +1,6 @@
 package com.api.parkingcontrol.service;
 
+import com.api.parkingcontrol.dtos.ParkingSpotDto;
 import com.api.parkingcontrol.exception.DuplicateParkingSpotException;
 import com.api.parkingcontrol.models.ParkingSpotModel;
 import com.api.parkingcontrol.repository.ParkingSpotRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,7 +62,7 @@ class ParkingSpotServiceTest {
     }
 
     @Test
-    public void should_Retunr_Duplicate_Exception_When_DuplicateLicensePlateCarExists() {
+    public void should_Return_Duplicate_Exception_When_DuplicateLicensePlateCarExists() {
         when(repository.existsByLicensePlateCar(model.getLicensePlateCar())).thenReturn(true);
         ParkingSpotService service = new ParkingSpotService(repository);
 
@@ -162,5 +164,40 @@ class ParkingSpotServiceTest {
         boolean result = service.existsDuplicateParkingSpotModel(parkingSpotModel);
 
         assertFalse(result);
+    }
+
+    @Test
+    void should_Update_ParkingSpot() {
+        UUID id = UUID.randomUUID();
+        ParkingSpotDto parkingSpotDto = new ParkingSpotDto();
+        parkingSpotDto.setLicensePlateCar("ABC-1234");
+
+        ParkingSpotModel existingModel = new ParkingSpotModel();
+        existingModel.setId(id);
+        existingModel.setLicensePlateCar("ABC-1232");
+
+        when(repository.findById(id)).thenReturn(Optional.of(existingModel));
+        when(repository.save(any(ParkingSpotModel.class))).thenReturn(existingModel);
+
+        ParkingSpotModel result = service.update(id, parkingSpotDto);
+
+        assertNotNull(result);
+        assertEquals(existingModel, result);
+        assertEquals("ABC-1234", existingModel.getLicensePlateCar());
+
+        verify(repository, times(1)).save(any(ParkingSpotModel.class));
+    }
+
+    @Test
+    void should_Do_not_Update_ParkingSpot_when_not_found() {
+        UUID id = UUID.randomUUID();
+        ParkingSpotDto parkingSpotDto = new ParkingSpotDto();
+
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(DuplicateParkingSpotException.class, () -> service.update(id, parkingSpotDto));
+
+        verify(repository, times(1)).findById(id);
+        verify(repository, never()).save(any(ParkingSpotModel.class));
     }
 }

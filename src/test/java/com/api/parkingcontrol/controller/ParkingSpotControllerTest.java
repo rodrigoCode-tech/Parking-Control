@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -110,7 +111,8 @@ class ParkingSpotControllerTest {
 
          mockMvc.perform(MockMvcRequestBuilders.get("/parkingSpot")
                          .contentType(MediaType.APPLICATION_JSON))
-                 .andExpect(status().isOk());
+                 .andExpect(status().isOk())
+                 .andExpect(jsonPath("$.content", hasSize(greaterThan(0))));
      }
 
      @Test
@@ -154,7 +156,48 @@ class ParkingSpotControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/parkingSpot/name/" + licensePlateCar)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content", hasSize(1)))
-                .andExpect(jsonPath("$.content[0].licensePlateCar").value(licensePlateCar   ));
+                .andExpect(jsonPath("$.content[0].licensePlateCar").value(licensePlateCar))
+                .andExpect(jsonPath("$.content[0].parkingSpotNumber").value("A7"))
+                .andExpect(jsonPath("$.content[0].apartment").value("16"));
     }
 
+    @Test
+    public void should_update_parking_spot() throws Exception {
+        String parkingSpotJson = "{\"licensePlateCar\": \"vfd-968\", \"parkingSpotNumber\": \"D5\"," +
+                " \"responsibleName\": \"Edgar\", \"brandCar\": \"Fiat\", \"modelCar\": \"Toro\"," +
+                " \"apartment\": \"154\", \"block\": \"F\", \"colorCar\": \"PINK\"}";
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/parkingSpot")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(parkingSpotJson))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String responseContent = mvcResult.getResponse().getContentAsString();
+        JsonNode jsonNode = new ObjectMapper().readTree(responseContent);
+        UUID createdParkingSpotId = UUID.fromString(jsonNode.get("id").textValue());
+
+        String updatedParkingSpotJson = "{\"licensePlateCar\": \"ABC789\", \"parkingSpotNumber\": \"B1\"," +
+                " \"responsibleName\": \"UpdatedName\", \"brandCar\": \"UpdatedBrand\", \"modelCar\": \"UpdatedModel\"," +
+                " \"apartment\": \"1234\", \"block\": \"E\", \"colorCar\": \"Black\"}";
+
+        MvcResult mvcResultUpdate = mockMvc.perform(MockMvcRequestBuilders.put("/parkingSpot/" + createdParkingSpotId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedParkingSpotJson))
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/parkingSpot/" + createdParkingSpotId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(createdParkingSpotId.toString()))
+                .andExpect(jsonPath("$.licensePlateCar").value("ABC789"))
+                .andExpect(jsonPath("$.parkingSpotNumber").value("B1"))
+                .andExpect(jsonPath("$.apartment").value("1234"))
+                .andExpect(jsonPath("$.block").value("E"))
+                .andExpect(jsonPath("$.brandCar").value("UpdatedBrand"))
+                .andExpect(jsonPath("$.colorCar").value("Black"))
+                .andExpect(jsonPath("$.modelCar").value("UpdatedModel"))
+                .andExpect(jsonPath("$.responsibleName").value("UpdatedName"));
+    }
 }

@@ -62,7 +62,7 @@ public class ParkingSpotController {
     public ResponseEntity<Object> deleteParkingSpot(@PathVariable(value = "id") UUID id){
         Optional<ParkingSpotModel> parkingSpotModelOptional = service.findById(id);
         if (!parkingSpotModelOptional.isPresent()) {
-        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found.");
+			throw new DuplicateParkingSpotException("Conflict: Parking Spot not found.");
         }
         service.delete(parkingSpotModelOptional.get());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Parking Spot deleted successfully.");
@@ -76,5 +76,5 @@ public class ParkingSpotController {
 		} catch (DuplicateParkingSpotException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found.");
 		}
-		}
+	}
 }
