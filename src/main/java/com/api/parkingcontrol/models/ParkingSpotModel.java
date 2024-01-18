@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -21,31 +22,32 @@ public class ParkingSpotModel implements Serializable {
 		@Column(columnDefinition = "VARCHAR(36)")
 	    @Type(type = "uuid-char")
 		private UUID id;
-	
+	@NotBlank
     @Column(nullable = false, unique = true, length = 10)
     private String parkingSpotNumber;
-    
+
+	@NotBlank
     @Column(nullable = false, unique = true, length = 7)
     private String licensePlateCar;
-    
+    @NotBlank
     @Column(nullable = false, length = 70)
     private String brandCar;
-    
+    @NotBlank
     @Column(nullable = false, length = 70)
     private String modelCar;
-    
+    @NotBlank
     @Column(nullable = false, length = 70)
     private String colorCar;
     
     @Column(nullable = false)
     private LocalDateTime registrationDate;
-    
+    @NotBlank
     @Column(nullable = false, length = 130)
     private String responsibleName;
-    
+    @NotBlank
     @Column(nullable = false, length = 30)
     private String apartment;
-    
+    @NotBlank
     @Column(nullable = false, length = 30)
     private String block;
     

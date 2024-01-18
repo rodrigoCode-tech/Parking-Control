@@ -26,7 +26,7 @@ public class ParkingSpotService {
 	@Transactional
     public ParkingSpotModel save(ParkingSpotModel parkingSpotModel) {
 		if (existsDuplicateParkingSpotModel(parkingSpotModel)) {
-			throw new DuplicateParkingSpotException("Conflict: Duplicate parking spot information!");
+			throw new DuplicateParkingSpotException(" Duplicate parking spot information!");
 		}
 		return repository.save(parkingSpotModel);
 	}
@@ -56,7 +56,7 @@ public class ParkingSpotService {
 	public ParkingSpotModel update(UUID id, ParkingSpotDto parkingSpotDto) {
 		Optional<ParkingSpotModel> parkingSpotModelOptional = repository.findById(id);
 		if (!parkingSpotModelOptional.isPresent()) {
-			throw new DuplicateParkingSpotException("Conflict: Duplicate parking spot information!");
+			throw new DuplicateParkingSpotException("Duplicate parking spot information!");
 		}
 
 		ParkingSpotModel existingParkingSpotModel = parkingSpotModelOptional.get();
