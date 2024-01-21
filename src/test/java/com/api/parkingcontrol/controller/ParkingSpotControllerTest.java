@@ -63,7 +63,7 @@ class ParkingSpotControllerTest {
                 .andReturn();
 
         assertEquals(409, result.getResponse().getStatus());
-        assertEquals("Conflict: Duplicate parking spot information!", result.getResponse().getContentAsString());
+        assertEquals("Conflict:  Duplicate parking spot information!", result.getResponse().getContentAsString());
     }
 
         @Test
