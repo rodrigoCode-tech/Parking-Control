@@ -19,8 +19,7 @@ import java.util.UUID;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -64,7 +63,7 @@ class ParkingSpotControllerTest {
                 .andReturn();
 
         assertEquals(409, result.getResponse().getStatus());
-        assertEquals("Conflict: Conflict: Duplicate parking spot information!", result.getResponse().getContentAsString());
+        assertEquals("Conflict: Duplicate parking spot information!", result.getResponse().getContentAsString());
     }
 
         @Test
@@ -199,5 +198,20 @@ class ParkingSpotControllerTest {
                 .andExpect(jsonPath("$.colorCar").value("Black"))
                 .andExpect(jsonPath("$.modelCar").value("UpdatedModel"))
                 .andExpect(jsonPath("$.responsibleName").value("UpdatedName"));
+    }
+
+    @Test
+    public void should_fail_to_update_parking_spot() throws Exception {
+        UUID parkingSpotId = UUID.randomUUID();
+
+        String updatedParkingSpotJson = "{\"licensePlateCar\": \"ABC789\", \"parkingSpotNumber\": \"B1\"," +
+                " \"responsibleName\": \"UpdatedName\", \"brandCar\": \"UpdatedBrand\", \"modelCar\": \"UpdatedModel\"," +
+                " \"apartment\": \"1234\", \"block\": \"E\", \"colorCar\": \"Black\"}";
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/parkingSpot/" + parkingSpotId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedParkingSpotJson))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Parking Spot not found."));
     }
 }

@@ -14,14 +14,14 @@ import java.util.UUID;
 @Entity
 @Table(name = "TB_PARKING_SPOT")
 public class ParkingSpotModel implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	    @Id
-		@GeneratedValue(generator = "uuid2")
-		@GenericGenerator(name = "uuid2", strategy = "uuid2")
-		@Column(columnDefinition = "VARCHAR(36)")
-	    @Type(type = "uuid-char")
-		private UUID id;
+	@Id
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	@Column(columnDefinition = "VARCHAR(36)")
+	@Type(type = "uuid-char")
+	private UUID id;
 	@NotBlank
     @Column(nullable = false, unique = true, length = 10)
     private String parkingSpotNumber;
@@ -53,8 +53,6 @@ public class ParkingSpotModel implements Serializable {
     
     public ParkingSpotModel() {
     }
-    
-
 	public ParkingSpotModel(UUID id, String parkingSpotNumber, String licensePlateCar, String brandCar, String modelCar,
 			String colorCar, LocalDateTime registrationDate, String responsibleName, String apartment, String block) {
 		super();

@@ -15,8 +15,6 @@ import java.util.UUID;
 
 @Service
 public class ParkingSpotService {
-
-	//Injeção de dependêcias
 	private final ParkingSpotRepository repository;
 
 	public ParkingSpotService(ParkingSpotRepository repository) {
@@ -50,7 +48,6 @@ public class ParkingSpotService {
 
 	public  void delete(ParkingSpotModel parkingSpotModel) {
 		repository.delete(parkingSpotModel);
-		
 	}
 
 	public ParkingSpotModel update(UUID id, ParkingSpotDto parkingSpotDto) {
