@@ -2,8 +2,8 @@ package com.api.parkingcontrol.dtos;
 
 import lombok.Getter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Getter
 public class ParkingSpotDto {

@@ -1,10 +1,9 @@
 package com.api.parkingcontrol.models;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,7 +19,6 @@ public class ParkingSpotModel implements Serializable {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(columnDefinition = "VARCHAR(36)")
-	@Type(type = "uuid-char")
 	private UUID id;
 	@NotBlank
     @Column(nullable = false, unique = true, length = 10)
